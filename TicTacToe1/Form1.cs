@@ -1,14 +1,10 @@
-﻿using System; 
-using System.Reflection;
-using System.Text;
-
-namespace TicTacToe1
-    //The title/ name of the code & game. 
+﻿namespace TicTacToe1
+//The title/ name of the code & game. 
 {
     public partial class Form1 : Form
     {
         //This states if the user can change the code when the game is in process and changing any default code. 
-        
+
         private enum Player
         {
             X, O //These are the constants characters for the game. The protagonist is the 'X' and the 'O' is the antagonist. 
@@ -23,7 +19,7 @@ namespace TicTacToe1
         List<Button> buttons; //This goes connects to the buttons listed below 
                               //This goes connects to the buttons listed below "buttons = new List<Button> { button1, button2, button3, button4, button5,
                               //button6, button7, button8, button9" to create an estimated point system."
-                              
+        bool waitingforcpu = false;
 
         //The code above allows the user to see the points changing when one player scores a point. 
 
@@ -61,28 +57,35 @@ namespace TicTacToe1
 
                 buttons.RemoveAt(index); //When restarting the game, the character x will remove itself and start fresh - Except for the point board.
                 CheckGame();             //Activating the code above and making sure everything moves to how it has been designed to do, restart and place the characters.
-                CPUwatch.Stop();         //Stopping the CPUwatch allows the character to stop activating buttons when the game and the player O has finished selecting.
+                CPUwatch.Stop();
+                waitingforcpu = false;//Stopping the CPUwatch allows the character to stop activating buttons when the game and the player O has finished selecting.
 
             } //All the code in the class of CPUmove is all effecting the characters and buttons when it is the antagonist's turn to make a move
-        }     
-        
+        }
+
 
         private void PlayerClickButton(object sender, EventArgs e)
         {
-            var button = (Button)sender;
+            if
+                (!waitingforcpu)
+            {
 
-            currentPlayer = Player.O;
-            button.Text = currentPlayer.ToString();
+                var button = (Button)sender;
 
-            button.Enabled = false;
-            button.BackColor = Color.LightBlue;
-            buttons.Remove(button);
+                currentPlayer = Player.O;
+                button.Text = currentPlayer.ToString();
 
-            CheckGame();
-            CPUwatch.Start();
+                button.Enabled = false;
+                button.BackColor = Color.LightBlue;
+                buttons.Remove(button);
+
+                CheckGame();
+                CPUwatch.Start();
+                waitingforcpu = true;
+            }
         } //Everything in the PlayerClickButton class is the exact same code for the CPU. 
 
-                private void CheckGame()
+        private void CheckGame()
         {
 
             if (button1.Text == "O" && button2.Text == "O" && button3.Text == "O"
@@ -135,7 +138,7 @@ namespace TicTacToe1
 
                 x.BackColor = DefaultBackColor;  //The colour is similar to white. A basic background to identify the lining of each square and not
                                                  // to confuse the player where the buttons are placed for those who are colour blinded.
-                
+
             }
 
         }
